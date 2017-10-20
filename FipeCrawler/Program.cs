@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2017
+ * Author: Érycson Nóbrega <egdn2004@gmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.If not, see<http://www.gnu.org/licenses/>.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Data.SQLite;
@@ -18,7 +36,6 @@ namespace FipeCrawler
         const string URL_MODELOS = "http://fipeapi.appspot.com/api/1/carros/veiculo/{0}/{1}.json";
         const string URL_FIPE = "http://fipeapi.appspot.com/api/1/carros/veiculo/{0}/{1}/{2}.json";
         SQLiteConnection _connection;
-        //CountdownEvent countdownEvent = new CountdownEvent(0);
         static Queue<TaskQueue> _queue = new Queue<TaskQueue>();
 
         static void Main(string[] args)
@@ -35,9 +52,10 @@ namespace FipeCrawler
                 Pooling = true
             }.ConnectionString);
 
+            // Abre a conexão com o SQLite
             _connection.Open();
-
-
+            
+            // Limpa o banco de dados
             SQLiteCommand cmdClearMarcas = new SQLiteCommand("DELETE FROM marcas", _connection);
             cmdClearMarcas.ExecuteNonQuery();
             SQLiteCommand cmdClearVeiculos = new SQLiteCommand("DELETE FROM veiculos", _connection);
@@ -47,6 +65,7 @@ namespace FipeCrawler
             SQLiteCommand cmdClearFipe = new SQLiteCommand("DELETE FROM fipe", _connection);
             cmdClearFipe.ExecuteNonQuery();
 
+            // Obtem a lista de marcas
             GetMarcas();
         }
 
